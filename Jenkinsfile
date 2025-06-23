@@ -1,69 +1,71 @@
 pipeline {
     agent any
-
-    environment {
-        
-        MONGO_URL = 'mongodb+srv://kaburaricky:ricky2025@gallery.wc344.mongodb.net/RickyCluster?retryWrites=true&w=majority';
-
-        RENDER_DEPLOY_SCRIPT = 'node server.js'
-    }
-
-    triggers {
-        githubPush()
-    }
-
+    
     tools {
-        nodejs "nodejs"
-
+        nodejs 'NodeJS_LTS' // This should match the name you configured
     }
-
+    
+    environment {
+        RENDER_DEPLOY_HOOK = credentials('https://api.render.com/deploy/srv-d1ckhi6r433s73ftjvi0?key=DmffchKG_Nc')
+        RENDER_APP_URL = 'https://gallery-juep.onrender.com'
+        EMAIL_RECIPIENT = 'kaburaricky@gmail.com'
+        SLACK_CHANNEL = '#yourfirstname_ip1'
+    }
+    
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
         stage('Clone code') {
             steps {
                 git branch: 'master', url: 'https://github.com/KenanRicky/gallery.git'
             }
         }
 
-        stage('Install dependencies') {
+        
+        stage('Install Dependencies') {
             steps {
                 sh 'npm install'
             }
         }
-
-     stage('Run Tests') {
-    steps {
-        sh 'npx mocha test/serverTest.js --exit'
-    }
-}
-
-
-        stage('Deploy to Render') {
+        
+        stage('Run Tests') {
             steps {
-                sh 'curl -X POST https://api.render.com/deploy/srv-d1at5r8dl3ps73e2mcsg?key=7h0NW4Ddv6Q'
+                script {
+                    try {
+                        sh 'npm test'
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        throw e
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy to Render') {
+            when {
+                expression { currentBuild.result != 'FAILURE' }
+            }
+            steps {
+                script {
+                    sh '''
+                        echo "Triggering Render deployment..."
+                        curl -X POST $RENDER_DEPLOY_HOOK
+                    '''
+                }
             }
         }
     }
-
+    
     post {
         success {
-            echo 'Deployment to Render was successful!'
+            echo 'Pipeline completed successfully!'
         }
-
         failure {
-            echo 'Build or tests failed. Sending email...'
-            mail to: 'felixkegode@gmail.com',
-                 subject: "BUILD FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                 body: """\
-Hello,
-
-The Jenkins build for job '${env.JOB_NAME}' (build #${env.BUILD_NUMBER}) has failed.
-
-Please check the Jenkins console output for more details:
-${env.BUILD_URL}
-
-Regards,
-Jenkins
-"""
+            echo 'Pipeline failed!'
         }
     }
 }

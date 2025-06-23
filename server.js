@@ -8,8 +8,8 @@ let index = require('./routes/index');
 let image = require('./routes/image');
 
 // connecting the database
-let mongodb_url = 'mongodb://localhost:27017/';
-let dbName = 'darkroom';
+let mongodb_url = 'mongodb+srv://<kaburaricky>:<ricky2025>@rickycluster.yknl9gf.mongodb.net/?retryWrites=true&w=majority&appName=RickyCluster';
+let dbName = 'RickyCluster';
 mongoose.connect(`${mongodb_url}${dbName}`,{ useNewUrlParser: true , useUnifiedTopology: true }, (err)=>{
     if (err) console.log(err)
 });
@@ -42,5 +42,5 @@ app.use('/image', image);
  
 const PORT = process.env.PORT || 5000;
 app.listen(PORT,() =>{
-    console.log(`Server is listening at http://localhost:${PORT}`)
+    console.log(`Server is listening at :${PORT}`)
 });

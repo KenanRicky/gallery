@@ -14,7 +14,7 @@ pipeline {
 
     tools {
         nodejs "nodejs"
-        gradle "gradle"
+
     }
 
     stages {

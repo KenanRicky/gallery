@@ -6,4 +6,4 @@ config.mongoURI = {
     development: 'mongodb+srv://kaburaricky:ricky2025@gallery.wc344.mongodb.net/RickyCluster-dev?retryWrites=true&w=majority',
     test: 'mongodb+srv://kaburaricky:ricky2025@gallery.wc344.mongodb.net/RickyCluster-test?retryWrites=true&w=majority',
 }
-module.exports = config;
+

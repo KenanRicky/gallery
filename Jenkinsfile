@@ -18,12 +18,18 @@ pipeline {
                 checkout scm
             }
         }
-        
+
         stage('Clone code') {
             steps {
                 git branch: 'master', url: 'https://github.com/KenanRicky/gallery.git'
             }
         }
+        stage('Deploy to Render') {
+            steps {
+                sh 'curl -X POST https://api.render.com/deploy/srv-d1at5r8dl3ps73e2mcsg?key=7h0NW4Ddv6Q'
+            }
+        }
+    }
 
         
         stage('Install Dependencies') {

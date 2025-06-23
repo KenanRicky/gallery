@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         
-        MONGO_URL = 'mongodb+srv://<kaburaricky>:<ricky2025>@gallery.wc344.mongodb.net/darkroom?retryWrites=true&w=majority';
+        MONGO_URL = 'mongodb+srv://kaburaricky:ricky2025@gallery.wc344.mongodb.net/RickyCluster?retryWrites=true&w=majority';
 
         RENDER_DEPLOY_SCRIPT = 'node server.js'
     }

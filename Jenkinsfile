@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     tools {
-        nodejs 'NodeJS-24'
+        nodejs 'NodeJS-LTS'
     }
     stages {
         stage('Clone Repository') {
